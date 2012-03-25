@@ -45,4 +45,12 @@ class AppController extends Controller {
       $this->redirect(array('controller' => 'homes', 'action' => 'index'));
     }
   }
+
+  function getScriptPath() {
+    $row = $this->Setting->find('first', array(
+      'conditions' => array('name' => 'script_path'),
+      'recursive' => -1
+    ));
+    return $row['Setting']['value'];
+  }
 }

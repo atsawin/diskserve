@@ -1,22 +1,28 @@
 <?php
 class HomesController extends AppController {
 
+  var $uses = array('Setting');
+
   public function index() {
   }
 
   public function run() {
-    shell_exec("sudo /www/disksrv1.nakhon.net/app/script/run.sh");
+    $script_path = $this->getScriptPath();
+    shell_exec("sudo {$script_path}/run.sh");
   }
 
   public function update() {
-    shell_exec("sudo /www/disksrv1.nakhon.net/app/script/update.sh");
+    $script_path = $this->getScriptPath();
+    shell_exec("sudo {$script_path}/update.sh");
   }
 
   public function clearCoW() {
-    shell_exec("sudo /www/disksrv1.nakhon.net/app/script/clearCow.sh");
+    $script_path = $this->getScriptPath();
+    shell_exec("sudo {$script_path}/clearCow.sh");
   }
 
   public function status() {
-    $this->set('status', shell_exec("sudo /www/disksrv1.nakhon.net/app/script/status.sh"));
+    $script_path = $this->getScriptPath();
+    $this->set('status', shell_exec("sudo {$script_path}/status.sh"));
   }
 }
