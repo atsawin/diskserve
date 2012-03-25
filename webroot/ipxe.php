@@ -1,15 +1,6 @@
 <?php
 
-$computer_map = array(
-  '10.64.2.51' => array(
-    'computer_name' => 'net01',
-    'loop_name' => '/dev/loop1'
-  ),
-  '10.64.2.242' => array(
-    'computer_name' => 'net02',
-    'loop_name' => '/dev/loop2'
-  )
-);
+require_once('../script/config/map.php');
 
 $ip = $_SERVER['REMOTE_ADDR'];
 $computer_name = $computer_map[$ip]['computer_name'];
