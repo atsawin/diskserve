@@ -14,7 +14,7 @@
            'options' => array('R' => 'Run', 'U' => 'Update'),
            'value' => $mode[$cluster['Cluster']['id']]['mode']));
        echo $this->Form->input("{$cluster['Cluster']['id']}.computer", array('type' => 'select', 'options' => $computers,
-           'value' => $mode[$cluster['Cluster']['id']]['computer']));
+           'label' => 'Update Computer', 'value' => $mode[$cluster['Cluster']['id']]['computer']));
        echo "</fieldset>\n";
      }
      echo $this->Form->end(__('Submit'));

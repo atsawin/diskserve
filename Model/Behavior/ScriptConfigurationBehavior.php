@@ -31,7 +31,9 @@ EOM
     'computer_name' => '{$computer['name']}',
     'image_loop_name' => '{$cluster['Cluster']['loop_name']}',
     'cow_loop_name' => '{$computer['loop_name']}',
-    'cow_size' => {$cluster['Cluster']['cow_size']}
+    'cow_size' => {$cluster['Cluster']['cow_size']},
+    'cluster_id' => {$cluster['Cluster']['id']},
+    'cluster_name' => '{$cluster['Cluster']['name']}'
   ),
 
 EOM

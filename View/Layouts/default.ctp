@@ -23,7 +23,7 @@ $programName = 'Disk Serve';
 <body>
 	<div id="container">
 		<div id="header">
-			<h1><?php echo $this->Html->link($programName, 'http://www.jandp.co.th/'); ?></h1>
+			<h1><?php echo $this->Html->link($programName, array('controller' => 'homes', 'action' => 'index')); ?></h1>
 		</div>
 		<div id="content">
 

@@ -1,14 +1,22 @@
+fieldset {
+  border: 1px solid #000000;
+}
+legend {
+  padding: 0 5px;
+}
 label {
-  width: 100px;
+  width: 120px;
   display: inline-block;
+  text-align: right;
+  margin: 0 5px 3px 0;
 }
 .radio label:first-child {
-  width: 100px;
-  margin: 0;
+  width: 120px;
+  margin: 0 5px 3px 0;
 }
 .radio label {
   width: auto;
-  margin: 0 15px 6px 5px;
+  margin: 0 15px 3px 5px;
 }
 input[type="radio"] {
   float: none;
