@@ -14,6 +14,8 @@ class ScriptConfigurationBehavior extends ModelBehavior {
     $image_path = $row['Setting']['value'];
     $row = $this->Setting->find('first', array('conditions' => array('name' => 'cow_path')));
     $cow_path = $row['Setting']['value'];
+    $row = $this->Setting->find('first', array('conditions' => array('name' => 'server_iscsi_address')));
+    $server_iscsi_address = $row['Setting']['value'];
     $clusters = $this->Cluster->find('all');
     $fp = fopen("{$script_path}/config/map.php", 'w');
     fwrite($fp, <<< EOM
@@ -27,7 +29,9 @@ EOM
         fwrite($fp, <<< EOM
   '{$computer['ip_address']}' => array(
     'computer_name' => '{$computer['name']}',
-    'loop_name' => '{$computer['loop_name']}'
+    'image_loop_name' => '{$cluster['Cluster']['loop_name']}',
+    'cow_loop_name' => '{$computer['loop_name']}',
+    'cow_size' => {$cluster['Cluster']['cow_size']}
   ),
 
 EOM
@@ -36,6 +40,8 @@ EOM
     }
     fwrite($fp, <<< EOM
 );
+\$script_path = '{$script_path}';
+\$server_iscsi_address = '{$server_iscsi_address}';
 
 EOM
     );

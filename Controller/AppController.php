@@ -32,6 +32,8 @@ App::uses('Controller', 'Controller');
  * @link http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
+  var $uses = array('Setting');
+
   public $components = array(
     'Session',
     'Auth' => array(
@@ -46,11 +48,15 @@ class AppController extends Controller {
     }
   }
 
-  function getScriptPath() {
+  function getSetting($name) {
     $row = $this->Setting->find('first', array(
-      'conditions' => array('name' => 'script_path'),
+      'conditions' => array('name' => $name),
       'recursive' => -1
     ));
     return $row['Setting']['value'];
+  }
+
+  function getScriptPath() {
+    return $this->getSetting('script_path');
   }
 }

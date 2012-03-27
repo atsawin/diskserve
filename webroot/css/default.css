@@ -1,0 +1,15 @@
+label {
+  width: 100px;
+  display: inline-block;
+}
+.radio label:first-child {
+  width: 100px;
+  margin: 0;
+}
+.radio label {
+  width: auto;
+  margin: 0 15px 6px 5px;
+}
+input[type="radio"] {
+  float: none;
+}

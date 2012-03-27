@@ -4,7 +4,9 @@ require_once('../script/config/map.php');
 
 $ip = $_SERVER['REMOTE_ADDR'];
 $computer_name = $computer_map[$ip]['computer_name'];
-$loop_name = $computer_map[$ip]['loop_name'];
+$image_loop_name = $computer_map[$ip]['image_loop_name'];
+$cow_loop_name = $computer_map[$ip]['cow_loop_name'];
+$cow_size = $computer_map[$ip]['cow_size'];
 
 $iet = file('/proc/net/iet/volume');
 foreach ($iet as $line) {
@@ -16,13 +18,13 @@ foreach ($iet as $line) {
   }
 }
 
-shell_exec("sudo /www/disksrv1.nakhon.net/app/script/newcow.sh {$computer_name} {$tid} /dev/loop0 {$loop_name} 5120");
+shell_exec("sudo {$script_path}/newcow.sh {$computer_name} {$tid} {$image_loop_name} {$cow_loop_name} {$cow_size}");
 
 echo <<<EOM
 #!ipxe
 
 dhcp
-set root-path iscsi:10.64.2.1::::iqn.1999-06.net.nakhon.server3:{$computer_name}
+set root-path iscsi:{$server_iscsi_address}:{$computer_name}
 sanboot \${root-path}
 
 EOM;
