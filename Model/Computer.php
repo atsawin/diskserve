@@ -6,6 +6,8 @@ App::uses('AppModel', 'Model');
  * @property Cluster $Cluster
  */
 class Computer extends AppModel {
+  public $actsAs = array('ScriptConfiguration');
+
 /**
  * Display field
  *
