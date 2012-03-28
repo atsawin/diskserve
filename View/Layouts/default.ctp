@@ -15,6 +15,9 @@ $programName = 'Disk Serve';
 		echo $this->Html->css('cake.generic');
 		echo $this->Html->css('default');
 
+		echo $this->Html->script('jquery.min');
+		echo $this->Html->script('default');
+
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');

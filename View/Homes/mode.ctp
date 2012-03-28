@@ -11,11 +11,15 @@
        echo "<fieldset>\n";
        echo "<legend>{$cluster['Cluster']['name']}</legend>\n";
        echo $this->Form->input("{$cluster['Cluster']['id']}.mode", array('type' => 'radio', 'legend' => false,
-           'before' => $this->Form->label('Mode'),
+           'before' => $this->Form->label("{$cluster['Cluster']['id']}Mode"),
            'options' => array('R' => 'Run', 'U' => 'Update'),
-           'value' => $mode[$cluster['Cluster']['id']]['mode']));
-       echo $this->Form->input("{$cluster['Cluster']['id']}.computer", array('type' => 'select', 'options' => $computers,
-           'label' => 'Update Computer', 'value' => $mode[$cluster['Cluster']['id']]['computer']));
+           'value' => $mode[$cluster['Cluster']['id']]['mode'],
+           'div' => array('radioToggle' => "Cluster{$cluster['Cluster']['id']}Mode")));
+       echo $this->Html->div('',
+         $this->Form->input("{$cluster['Cluster']['id']}.computer", array('type' => 'select', 'options' => $computers,
+           'label' => 'Update Computer', 'value' => $mode[$cluster['Cluster']['id']]['computer'])),
+         array('blockName' => "Cluster{$cluster['Cluster']['id']}Mode", 'blockValues' => 'U')
+       );
        echo "</fieldset>\n";
      }
      echo $this->Form->end(__('Submit'));

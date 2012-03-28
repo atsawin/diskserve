@@ -1,8 +1,5 @@
 #!/bin/sh
 
-echo "<h2>Mode</h2>"
-/bin/ls -l /etc/dhcpd.conf
-echo
 echo "<h2>ietd</h2>"
 cat /proc/net/iet/volume
 echo
