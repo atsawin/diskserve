@@ -4,6 +4,8 @@ class HomesController extends AppController {
   var $uses = array('Cluster');
 
   public function index() {
+    $script_path = $this->getScriptPath();
+    $this->set('status', shell_exec("sudo {$script_path}/status.sh"));
   }
 
   public function run() {

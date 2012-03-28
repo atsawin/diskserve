@@ -1,5 +1,6 @@
 <div class="view">
   <h2>เปลี่ยน Mode การทำงาน</h2>
+  <h3>ปิดเครื่องลูกทุกเครื่องก่อนเรียกคำสั่ง</h3>
   <?php
      echo $this->Form->create('Cluster');
      foreach ($clusters as $cluster) {
