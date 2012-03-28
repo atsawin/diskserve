@@ -1,7 +1,10 @@
 #!/bin/sh
 
-echo "<h2>ietd</h2>"
+echo "<h2>ietd - volume</h2>"
 cat /proc/net/iet/volume
+echo
+echo "<h2>ietd - session</h2>"
+cat /proc/net/iet/session
 echo
 echo "<h2>CoW</h2>"
 /sbin/dmsetup status | sort

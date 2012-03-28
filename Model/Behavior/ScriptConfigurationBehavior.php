@@ -14,8 +14,10 @@ class ScriptConfigurationBehavior extends ModelBehavior {
     $image_path = $row['Setting']['value'];
     $row = $this->Setting->find('first', array('conditions' => array('name' => 'cow_path')));
     $cow_path = $row['Setting']['value'];
-    $row = $this->Setting->find('first', array('conditions' => array('name' => 'server_iscsi_address')));
-    $server_iscsi_address = $row['Setting']['value'];
+    $row = $this->Setting->find('first', array('conditions' => array('name' => 'server_ip_address')));
+    $server_ip_address = $row['Setting']['value'];
+    $row = $this->Setting->find('first', array('conditions' => array('name' => 'server_iscsi_name')));
+    $server_iscsi_name = $row['Setting']['value'];
     $clusters = $this->Cluster->find('all');
     $fp = fopen("{$script_path}/config/map.php", 'w');
     fwrite($fp, <<< EOM
@@ -43,7 +45,7 @@ EOM
     fwrite($fp, <<< EOM
 );
 \$script_path = '{$script_path}';
-\$server_iscsi_address = '{$server_iscsi_address}';
+\$server_iscsi_address = '{$server_ip_address}::::{$server_iscsi_name}';
 
 EOM
     );
@@ -58,6 +60,19 @@ EOM
       }
       foreach ($cluster['Computer'] as $computer) {
         fwrite($fp, "dmsetup create {$computer['name']} --table \"0 \${cow_size} snapshot {$cluster['Cluster']['loop_name']} {$computer['loop_name']} p 64\"\n");
+      }
+    }
+    fclose($fp);
+    $fp = fopen("{$script_path}/config/ietd.conf", 'w');
+    foreach ($clusters as $cluster) {
+      fwrite($fp, "Target {$server_iscsi_name}:{$cluster['Cluster']['name']}\n");
+      fwrite($fp, "  Lun 0 Path={$image_path}/{$cluster['Cluster']['name']}.img,Type=fileio\n");
+      foreach ($cluster['Computer'] as $computer) {
+        fwrite($fp, "Target {$server_iscsi_name}:{$computer['name']}\n");
+        fwrite($fp, "  Lun 0 Path=/dev/mapper/{$computer['name']},Type=fileio\n");
+        for ($cnt_disk = 1; $cnt_disk <= $cluster['Cluster']['extra_disk']; $cnt_disk++) {
+          fwrite($fp, "  Lun {$cnt_disk} Path={$image_path}/{$computer['name']}e{$cnt_disk}.img,Type=fileio\n");
+        }
       }
     }
     fclose($fp);
