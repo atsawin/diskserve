@@ -35,7 +35,14 @@ sanboot \${root-path}
 EOM;
   } else {
     // This computer is not use for update, send Linux
-    // TODO: send Linux
+    echo <<<EOM
+#!ipxe
+
+dhcp
+chain http://disksrv1.nakhon.net/memtest86
+
+EOM;
+//chain http://disksrv1.nakhon.net/vmlinuz-2.6.32.33-s1 nfsroot=10.64.2.1:/InterSol/ThinServ/s1 ip=::::::dhcp
   }
 } else {
   shell_exec("sudo {$script_path}/newcow.sh {$computer_name} {$tid} {$image_loop_name} {$cow_loop_name} {$cow_size}");

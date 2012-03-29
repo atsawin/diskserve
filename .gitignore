@@ -1,3 +1,5 @@
 /tmp
 /script/config
+/webroot/memtest*
+/webroot/vmlinuz*
 *~
