@@ -4,6 +4,9 @@ fieldset {
 legend {
   padding: 0 5px;
 }
+div[blockName] {
+  padding: 0;
+}
 label {
   width: 120px;
   display: inline-block;

@@ -1,2 +1,0 @@
-<h2>ล้าง CoW สำเร็จ</h2>
-<?php echo $this->Html->link('กลับ', array('controller' => 'homes', 'action' => 'index')); ?>

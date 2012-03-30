@@ -4,61 +4,49 @@ class HomesController extends AppController {
   var $uses = array('Cluster');
 
   public function index() {
-    include '../script/config/mode.php';
-
-    $script_path = $this->getScriptPath();
-    $this->set('status', shell_exec("sudo {$script_path}/status.sh"));
-    $this->set('mode', $mode);
-  }
-
-  public function run() {
-    $script_path = $this->getScriptPath();
-    shell_exec("sudo {$script_path}/run.sh");
-  }
-
-  public function update() {
-    $script_path = $this->getScriptPath();
-    shell_exec("sudo {$script_path}/update.sh");
-  }
-
-  public function clearCoW() {
-    $script_path = $this->getScriptPath();
-    shell_exec("sudo {$script_path}/clearCow.sh");
-  }
-
-  public function status() {
     $script_path = $this->getScriptPath();
     $this->set('status', shell_exec("sudo {$script_path}/status.sh"));
   }
 
-  public function mode() {
-    include '../script/config/mode.php';
-
+  public function merge() {
     $clusters = $this->Cluster->find('all');
     if ($this->request->is('post')) {
+      $tmp = print_r($this->request->data, true);
       $script_path = $this->getScriptPath();
-      $fp = fopen("{$script_path}/config/mode.php", 'w');
-      fwrite($fp, "<?php\n");
-      fwrite($fp, "\$mode = array(\n");
+      $image_path = $this->getSetting('image_path');
+      $cow_path = $this->getSetting('cow_path');
+      shell_exec("sudo {$script_path}/stop.sh >> /tmp/b 2>&1");
       foreach ($this->request->data['Cluster'] as $cluster_id => $cluster) {
+        if ($cluster['mode'] != 'U') {
+          continue;
+        }
         $current_cluster = array();
         foreach ($clusters as $search_cluster) {
           if ($search_cluster['Cluster']['id'] == (int)$cluster_id) {
             $current_cluster = $search_cluster;
           }
         }
-        if (!array_key_exists('computer', $cluster)) {
-          $cluster['computer'] = '';
+        foreach ($current_cluster['Computer'] as $computer) {
+          if ($computer['name'] == $cluster['computer']) {
+            $current_computer = $computer;
+          }
         }
-        fwrite($fp, "  {$cluster_id} => array('mode' => '{$cluster['mode']}', 'computer' => '{$cluster['computer']}', " .
-            "'name' => '{$current_cluster['Cluster']['name']}'),\n");
+        shell_exec("sudo {$script_path}/mergecow.sh {$image_path} {$current_cluster['Cluster']['name']} " .
+            "{$current_cluster['Cluster']['loop_name']} {$cow_path} {$cluster['computer']} {$current_computer['loop_name']} >> /tmp/b 2>&1");
       }
-      fwrite($fp, ");\n");
-      fclose($fp);
-      $this->Session->setFlash(__('Mode changed'));
-      $this->redirect(array('action' => 'mode'));
+      shell_exec("sudo {$script_path}/start.sh >> /tmp/b 2>&1");
+      $this->Session->setFlash(__('Merge completed'));
+      $this->redirect(array('action' => 'index'));
     }
     $this->set('clusters', $clusters);
-    $this->set('mode', $mode);
+  }
+
+  public function restart() {
+    if ($this->request->is('post')) {
+      $script_path = $this->getScriptPath();
+      $this->set('result', shell_exec("sudo {$script_path}/restart.sh"));
+      $this->Session->setFlash(__('Service restarted'));
+      $this->redirect(array('action' => 'index'));
+    }
   }
 }
