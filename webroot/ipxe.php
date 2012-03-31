@@ -1,7 +1,6 @@
 <?php
 
 require_once('../script/config/map.php');
-require_once('../script/config/mode.php');
 
 $ip = $_SERVER['REMOTE_ADDR'];
 $computer_name = $computer_map[$ip]['computer_name'];
@@ -21,32 +20,9 @@ foreach ($iet as $line) {
   }
 }
 
-if ($mode[$cluster_id]['mode'] == 'U') {
-  // Update mode
-  if ($mode[$cluster_id]['computer'] == $computer_name) {
-    // This computer is use for update, send master image
-    echo <<<EOM
-#!ipxe
-
-dhcp
-set root-path iscsi:{$server_iscsi_address}:{$cluster_name}
-sanboot \${root-path}
-
-EOM;
-  } else {
-    // This computer is not use for update, send Linux
-    echo <<<EOM
-#!ipxe
-
-dhcp
-chain http://disksrv1.nakhon.net/memtest86
-
-EOM;
-//chain http://disksrv1.nakhon.net/vmlinuz-2.6.32.33-s1 nfsroot=10.64.2.1:/InterSol/ThinServ/s1 ip=::::::dhcp
-  }
-} else {
-  shell_exec("sudo {$script_path}/newcow.sh {$computer_name} {$tid} {$image_loop_name} {$cow_loop_name} {$cow_size}");
-  echo <<<EOM
+shell_exec("sudo {$script_path}/newcow.sh {$computer_name} {$tid} {$image_path} {$image_loop_name} {$cow_path} " .
+    "{$cow_loop_name} {$cow_size}");
+echo <<<EOM
 #!ipxe
 
 dhcp
@@ -54,4 +30,5 @@ set root-path iscsi:{$server_iscsi_address}:{$computer_name}
 sanboot \${root-path}
 
 EOM;
-}
+//chain http://disksrv1.nakhon.net/memtest86
+//chain http://disksrv1.nakhon.net/vmlinuz-2.6.32.33-s1 nfsroot=10.64.2.1:/InterSol/ThinServ/s1 ip=::::::dhcp

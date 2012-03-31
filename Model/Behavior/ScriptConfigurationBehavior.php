@@ -45,6 +45,8 @@ EOM
     fwrite($fp, <<< EOM
 );
 \$script_path = '{$script_path}';
+\$image_path = '{$image_path}';
+\$cow_path = '{$cow_path}';
 \$server_iscsi_address = '{$server_ip_address}::::{$server_iscsi_name}';
 
 EOM

@@ -26,13 +26,16 @@ class HomesController extends AppController {
             $current_cluster = $search_cluster;
           }
         }
+        $computers = '';
         foreach ($current_cluster['Computer'] as $computer) {
+          $computers .= " {$computer['name']}";
           if ($computer['name'] == $cluster['computer']) {
             $current_computer = $computer;
           }
         }
         shell_exec("sudo {$script_path}/mergecow.sh {$image_path} {$current_cluster['Cluster']['name']} " .
             "{$current_cluster['Cluster']['loop_name']} {$cow_path} {$cluster['computer']} {$current_computer['loop_name']} >> /tmp/b 2>&1");
+        shell_exec("sudo {$script_path}/clearcows.sh {$cow_path} {$current_cluster['Cluster']['cow_size']} {$computers} >> /tmp/b 2>&1");
       }
       shell_exec("sudo {$script_path}/start.sh >> /tmp/b 2>&1");
       $this->Session->setFlash(__('Merge completed'));
