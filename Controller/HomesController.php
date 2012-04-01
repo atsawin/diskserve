@@ -44,6 +44,13 @@ class HomesController extends AppController {
     $this->set('clusters', $clusters);
   }
 
+  public function mode() {
+    $clusters = $this->Cluster->find('all');
+    if ($this->request->is('post')) {
+    }
+    $this->set('clusters', $clusters);
+  }
+
   public function restart() {
     if ($this->request->is('post')) {
       $script_path = $this->getScriptPath();

@@ -86,6 +86,13 @@ class Computer extends AppModel {
       'conditions' => '',
       'fields' => '',
       'order' => ''
+    ),
+    'Alternative' => array(
+      'className' => 'Alternative',
+      'foreignKey' => 'alternative_id',
+      'conditions' => '',
+      'fields' => '',
+      'order' => ''
     )
   );
 }

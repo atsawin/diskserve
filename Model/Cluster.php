@@ -68,6 +68,19 @@ class Cluster extends AppModel {
  * @var array
  */
   public $hasMany = array(
+    'Alternative' => array(
+      'className' => 'Alternative',
+      'foreignKey' => 'cluster_id',
+      'dependent' => false,
+      'conditions' => '',
+      'fields' => '',
+      'order' => '',
+      'limit' => '',
+      'offset' => '',
+      'exclusive' => '',
+      'finderQuery' => '',
+      'counterQuery' => ''
+    ),
     'Computer' => array(
       'className' => 'Computer',
       'foreignKey' => 'cluster_id',
