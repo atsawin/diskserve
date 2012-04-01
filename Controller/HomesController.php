@@ -1,7 +1,7 @@
 <?php
 class HomesController extends AppController {
 
-  var $uses = array('Cluster');
+  var $uses = array('Cluster', 'Computer');
 
   public function index() {
     $script_path = $this->getScriptPath();
@@ -11,7 +11,6 @@ class HomesController extends AppController {
   public function merge() {
     $clusters = $this->Cluster->find('all');
     if ($this->request->is('post')) {
-      $tmp = print_r($this->request->data, true);
       $script_path = $this->getScriptPath();
       $image_path = $this->getSetting('image_path');
       $cow_path = $this->getSetting('cow_path');
@@ -47,6 +46,17 @@ class HomesController extends AppController {
   public function mode() {
     $clusters = $this->Cluster->find('all');
     if ($this->request->is('post')) {
+      $data = array();
+      foreach ($this->request->data['Computer'] as $computer_id => $computer) {
+        if (($computer['mode'] == 'T') || ($computer['mode'] == 'P')) {
+          $data[] = array('id' => $computer_id, 'mode' => $computer['mode'], 'alternative_id' => null);
+        } else {
+          $data[] = array('id' => $computer_id, 'mode' => 'A', 'alternative_id' => $computer['mode']);
+        }
+      }
+      $this->Computer->saveMany($data);
+      $this->Session->setFlash(__('Mode changed'));
+      $this->redirect(array('action' => 'index'));
     }
     $this->set('clusters', $clusters);
   }

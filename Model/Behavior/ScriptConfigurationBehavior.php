@@ -27,10 +27,25 @@ class ScriptConfigurationBehavior extends ModelBehavior {
 EOM
     );
     foreach ($clusters as $cluster) {
+      $alternatives = Set::combine($cluster['Alternative'], '{n}.id', '{n}');
+      $this->log(print_r($alternatives, true));
       foreach ($cluster['Computer'] as $computer) {
+        if ($computer['alternative_id']) {
+          $alternative_mode = $alternatives[$computer['alternative_id']]['mode'];
+          $alternative_name = $alternatives[$computer['alternative_id']]['image'];
+          $alternative_loop_name = $alternatives[$computer['alternative_id']]['loop_name'];
+        } else {
+          $alternative_mode = '';
+          $alternative_name = '';
+          $alternative_loop_name = '';
+        }
         fwrite($fp, <<< EOM
   '{$computer['ip_address']}' => array(
     'computer_name' => '{$computer['name']}',
+    'mode' => '{$computer['mode']}',
+    'alternative_mode' => '{$alternative_mode}',
+    'alternative_name' => '{$alternative_name}',
+    'alternative_loop_name' => '{$alternative_loop_name}',
     'image_loop_name' => '{$cluster['Cluster']['loop_name']}',
     'cow_loop_name' => '{$computer['loop_name']}',
     'cow_size' => {$cluster['Cluster']['cow_size']},
