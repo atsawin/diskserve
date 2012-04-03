@@ -64,7 +64,7 @@ class DATABASE_CONFIG {
 		'persistent' => false,
 		'host' => 'localhost',
 		'login' => 'diskless',
-		'password' => 'diskless',
+		'password' => 'disknotless',
 		'database' => 'diskless',
 		'prefix' => '',
 		'encoding' => 'utf8',
