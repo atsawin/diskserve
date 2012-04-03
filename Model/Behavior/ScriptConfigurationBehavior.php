@@ -70,7 +70,7 @@ EOM
     $fp = fopen("{$script_path}/config/startup.sh", 'w');
     fwrite($fp, "#!/bin/sh\n");
     foreach ($clusters as $cluster) {
-      fwrite($fp, "losetup -r {$cluster['Cluster']['loop_name']} {$image_path}/disk1.img\n");
+      fwrite($fp, "losetup -r {$cluster['Cluster']['loop_name']} {$image_path}/{$cluster['Cluster']['name']}.img\n");
       fwrite($fp, "cow_size=`blockdev --getsize {$cluster['Cluster']['loop_name']}`\n");
       foreach ($cluster['Computer'] as $computer) {
         fwrite($fp, "losetup {$computer['loop_name']} {$cow_path}/{$computer['name']}.cow\n");
