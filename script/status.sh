@@ -9,6 +9,9 @@ echo
 echo "<h2>CoW</h2>"
 /sbin/dmsetup status | sort
 echo
+echo "<h2>Mapping</h2>"
+/sbin/dmsetup table | sort
+echo
 echo "<h2>Loopback</h2>"
 /sbin/losetup -a
 echo
