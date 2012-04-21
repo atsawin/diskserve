@@ -31,6 +31,8 @@ META_BLOCK=2
 while [ $TOTAL_BLOCK != $META_BLOCK ]; do
   sleep 1
   PROGRESS=`dmsetup status $COMPUTER_NAME`
+  date >> /tmp/a
+  echo $PROGRESS >> /tmp/a
   TOTAL_BLOCK=`echo $PROGRESS | awk 'BEGIN { FS = "[ /]" } { print $4 }'`
   META_BLOCK=`echo $PROGRESS | awk 'BEGIN { FS = "[ /]" } { print $6 }'`
 done
