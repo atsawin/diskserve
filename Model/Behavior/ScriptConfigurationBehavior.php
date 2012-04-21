@@ -71,6 +71,11 @@ EOM
     fwrite($fp, "#!/bin/sh\n");
     foreach ($clusters as $cluster) {
       fwrite($fp, "losetup -r {$cluster['Cluster']['loop_name']} {$image_path}/{$cluster['Cluster']['name']}.img\n");
+      foreach ($cluster['Alternative'] as $alternative) {
+        if ($alternative['mode'] == 'S') {
+          fwrite($fp, "losetup -r {$alternative['loop_name']} {$image_path}/{$alternative['image']}\n");
+        }
+      }
       fwrite($fp, "cow_size=`blockdev --getsize {$cluster['Cluster']['loop_name']}`\n");
       foreach ($cluster['Computer'] as $computer) {
         fwrite($fp, "losetup {$computer['loop_name']} {$cow_path}/{$computer['name']}.cow\n");
