@@ -41,6 +41,7 @@ class AppController extends Controller {
       'logoutRedirect' => array('controller' => 'users', 'action' => 'login')
     )
   );
+  public $helpers = array('Form', 'Html', 'Number', 'Session');
 
   function beforeFilter() {
     if ($this->here == '/') {

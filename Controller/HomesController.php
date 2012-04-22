@@ -9,6 +9,101 @@ class HomesController extends AppController {
   }
 
   public function merge() {
+    $clusters = $this->Cluster->find('all', array('order' => 'id'));
+    if ($this->request->is('post')) {
+      $data = $this->request->data['Cluster'];
+      $this->Session->write('data', $data);
+      $this->Session->write('clusters', $clusters);
+      $script_path = $this->getScriptPath();
+      shell_exec("sudo {$script_path}/stop.sh >> /tmp/b 2>&1");
+      foreach ($data as $cluster_id => $cluster) {
+        if ($cluster['mode'] != 'U') {
+          continue;
+        }
+        $this->start_merge($clusters, $script_path, $cluster_id, $cluster);
+        break;
+      }
+      $this->Session->setFlash(__('Merging...'));
+      $this->redirect(array('action' => 'merge_update'));
+    }
+    $this->set('clusters', $clusters);
+  }
+
+  protected function start_merge($clusters, $script_path, $cluster_id, $cluster) {
+    $current_cluster = array();
+    foreach ($clusters as $search_cluster) {
+      if ($search_cluster['Cluster']['id'] == (int)$cluster_id) {
+        $current_cluster = $search_cluster;
+      }
+    }
+    $image_path = $this->getSetting('image_path');
+    $cow_path = $this->getSetting('cow_path');
+    $computers = '';
+    foreach ($current_cluster['Computer'] as $computer) {
+      $computers .= " {$computer['name']}";
+      if ($computer['name'] == $cluster['computer']) {
+        $current_computer = $computer;
+      }
+    }
+    shell_exec("sudo {$script_path}/mergecow_start.sh {$image_path} {$current_cluster['Cluster']['name']} " .
+        "{$current_cluster['Cluster']['loop_name']} {$cow_path} {$cluster['computer']} {$current_computer['loop_name']} >> /tmp/b 2>&1");
+    $merge = array(
+      'cluster_id' => $cluster_id,
+      'image_path' => $image_path,
+      'cluster_name' => $current_cluster['Cluster']['name'],
+      'image_loop_name' => $current_cluster['Cluster']['loop_name'],
+      'cow_path' => $cow_path,
+      'computer_name' => $cluster['computer'],
+      'cow_loop_name' => $current_computer['loop_name'],
+      'cow_size' => $current_cluster['Cluster']['cow_size'],
+      'computers' => $computers
+    );
+    $this->Session->write('merge', $merge);
+  }
+
+  public function merge_update() {
+    $merge = $this->Session->read('merge');
+    $data = $this->Session->read('data');
+    $clusters = $this->Session->read('clusters');
+    if (empty($merge) || empty($data) || empty($clusters)) {
+      $this->Session->setFlash(__('Invalid merge session'));
+      $this->redirect(array('action' => 'index'));
+    }
+    $script_path = $this->getScriptPath();
+    $ret = shell_exec("sudo {$script_path}/mergecow_status.sh {$merge['image_path']} {$merge['cluster_name']} " .
+        "{$merge['image_loop_name']} {$merge['cow_path']} {$merge['computer_name']} {$merge['cow_loop_name']}");
+    $line_array = preg_split('/[ \/]/', $ret);
+    $status = array(
+      'pending_size' => $line_array[3] / 2,
+      'meta_size' => $line_array[5] / 2
+    );
+    if (empty($merge['cow_usage_size'])) {
+      $merge['cow_usage_size'] = $status['pending_size'];
+      $this->Session->write('merge', $merge);
+    }
+    if ($status['pending_size'] == $status['meta_size']) {
+      shell_exec("sudo {$script_path}/mergecow_finish.sh {$merge['image_path']} {$merge['cluster_name']} " .
+        "{$merge['image_loop_name']} {$merge['cow_path']} {$merge['computer_name']} {$merge['cow_loop_name']} >> /tmp/b 2>&1");
+      shell_exec("sudo {$script_path}/clearcows.sh {$merge['cow_path']} {$merge['cow_size']} {$merge['computers']} >> /tmp/b 2>&1");
+      foreach ($data as $cluster_id => $cluster) {
+        if ($cluster_id <= $merge['cluster_id']) {
+          continue;
+        }
+        if ($cluster['mode'] != 'U') {
+          continue;
+        }
+        $this->start_merge($clusters, $script_path, $cluster_id, $cluster);
+        $this->redirect(array('action' => 'merge_update'));
+      }
+      shell_exec("sudo {$script_path}/start.sh >> /tmp/b 2>&1");
+      $this->Session->setFlash(__('Merge Done!'));
+      $this->redirect(array('action' => 'index'));
+    }
+    $this->set('merge', $merge);
+    $this->set('status', $status);
+  }
+
+  public function merge_old() {
     $clusters = $this->Cluster->find('all');
     if ($this->request->is('post')) {
       $script_path = $this->getScriptPath();
