@@ -87,8 +87,8 @@ EOM
     fclose($fp);
     $fp = fopen("{$script_path}/config/ietd.conf", 'w');
     foreach ($clusters as $cluster) {
-      fwrite($fp, "Target {$server_iscsi_name}:{$cluster['Cluster']['name']}\n");
-      fwrite($fp, "  Lun 0 Path={$image_path}/{$cluster['Cluster']['name']}.img,Type=fileio\n");
+      fwrite($fp, "#Target {$server_iscsi_name}:{$cluster['Cluster']['name']}\n");
+      fwrite($fp, "#  Lun 0 Path={$image_path}/{$cluster['Cluster']['name']}.img,Type=fileio\n");
       foreach ($cluster['Computer'] as $computer) {
         fwrite($fp, "Target {$server_iscsi_name}:{$computer['name']}\n");
         fwrite($fp, "  Lun 0 Path=/dev/mapper/{$computer['name']},Type=fileio\n");
