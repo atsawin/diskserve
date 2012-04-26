@@ -1,28 +1,21 @@
 #!/bin/sh
 
-echo "<h2>ietd - volume</h2>"
+echo
+echo "::ietd_volume"
 timeout 5 cat /proc/net/iet/volume
-echo
-echo "<h2>ietd - session</h2>"
+echo "::ietd_session"
 timeout 5 cat /proc/net/iet/session
-echo
-echo "<h2>CoW</h2>"
+echo "::cow"
 /sbin/dmsetup status | sort
-echo
-echo "<h2>Mapping</h2>"
+echo "::mapping"
 /sbin/dmsetup table | sort
-echo
-echo "<h2>Loopback</h2>"
+echo "::loopback"
 /sbin/losetup -a
-echo
-echo "<h2>Load</h2>"
+echo "::load"
 /usr/bin/uptime
-echo
-echo "<h2>Memory</h2>"
+echo "::memory"
 /usr/bin/free
-echo
-echo "<h2>Disk</h2>"
+echo "::disk"
 /usr/bin/df
-echo
-echo "<h2>LAN</h2>"
+echo "::lan"
 /sbin/ifconfig

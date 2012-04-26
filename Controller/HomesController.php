@@ -5,7 +5,33 @@ class HomesController extends AppController {
 
   public function index() {
     $script_path = $this->getScriptPath();
-    $this->set('status', shell_exec("sudo {$script_path}/status.sh"));
+    $clusters = $this->Cluster->find('all', array(
+      'order' => 'id'
+    ));
+    $ret = shell_exec("sudo {$script_path}/status.sh");
+    $status = explode("\n", $ret);
+    $mode = '';
+    foreach ($status as $line) {
+      if (preg_match('/^::(.+)$/', $line, $match)) {
+        $mode = $match[1];
+      } else {
+        if ($mode == 'cow') {
+          $line_array = preg_split('/[: \/]/', $line);
+          foreach ($clusters as &$cluster) {
+            foreach ($cluster['Computer'] as &$computer) {
+              if ($computer['name'] == $line_array[0]) {
+                $computer['cow_size'] = $line_array[6] / 2;
+                $computer['cow_used'] = $line_array[5] / 2;
+              }
+            }
+            unset($computer);
+          }
+          unset($cluster);
+        }
+      }
+    }
+    $this->set('status', preg_replace("/\n::(.+)\n/", "\n\n<h2>$1</h2>\n", $ret));
+    $this->set('clusters', $clusters);
   }
 
   public function merge() {
