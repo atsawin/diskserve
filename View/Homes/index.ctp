@@ -33,7 +33,7 @@
         echo "<td>{$cnt}</td>\n";
         echo "<td>{$computer['name']}</td>\n";
         echo "<td>{$computer['ip_address']}</td>\n";
-        echo "<td>{$cow_left} MiB</td>\n";
+        echo "<td class=\"number\">" . $this->Number->format($cow_left, array('before' => '', 'places' => 2)) . " MiB</td>\n";
         echo "<td>{$mode}</td>\n";
         echo "</tr>\n";
       }
