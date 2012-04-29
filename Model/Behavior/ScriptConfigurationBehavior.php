@@ -98,5 +98,15 @@ EOM
       }
     }
     fclose($fp);
+    $fp = fopen("{$script_path}/config/dhcpd.conf", 'w');
+    foreach ($clusters as $cluster) {
+      foreach ($cluster['Computer'] as $computer) {
+        fwrite($fp, "host {$computer['name']} {\n");
+        fwrite($fp, "  hardware ethernet {$computer['mac_address']};\n");
+        fwrite($fp, "  fixed-address {$computer['ip_address']};\n");
+        fwrite($fp, "}\n");
+      }
+    }
+    fclose($fp);
   }
 }
