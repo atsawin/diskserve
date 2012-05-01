@@ -6,7 +6,7 @@
     foreach ($clusters as $cluster) {
       echo "<fieldset>\n";
       echo "<legend>{$cluster['Cluster']['name']}</legend>\n";
-      echo "<table>\n<tr>\n<th>Computer</th>\n<th>ปกติ-ล้างทุกครั้ง</th>\n<th>ปกติ-ไม่ล้าง</th>\n";
+      echo "<table class=\"list\">\n<tr>\n<th>Computer</th>\n<th>ปกติ-ล้างทุกครั้ง</th>\n<th>ปกติ-ไม่ล้าง</th>\n";
       foreach ($cluster['Alternative'] as $alternative) {
         echo "<th>{$alternative['name']}</th>\n";
       }

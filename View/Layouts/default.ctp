@@ -1,5 +1,5 @@
 <?php
-$programName = 'Disk Serve';
+$programName = 'Disk Serve Manager';
 ?>
 <!DOCTYPE html>
 <html>
@@ -27,11 +27,9 @@ $programName = 'Disk Serve';
 	<div id="container">
 		<div id="header">
 			<h1><?php echo $this->Html->link($programName, array('controller' => 'homes', 'action' => 'index')); ?></h1>
+			<?php echo $this->Session->flash(); ?>
 		</div>
 		<div id="content">
-
-			<?php echo $this->Session->flash(); ?>
-
 			<?php echo $this->fetch('content'); ?>
 		</div>
 		<div id="footer">

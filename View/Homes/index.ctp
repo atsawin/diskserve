@@ -1,6 +1,6 @@
 <div class="view">
   <h2>สถานะระบบ</h2>
-  <table>
+  <table class="list">
     <tr>
       <th>ที่</th>
       <th>ชื่อ</th>
