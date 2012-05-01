@@ -14,7 +14,7 @@ $cow_size = $computer_map[$ip]['cow_size'];
 $cluster_id = $computer_map[$ip]['cluster_id'];
 $cluster_name = $computer_map[$ip]['cluster_name'];
 
-$iet = file('/proc/net/iet/volume');
+$iet = shell_exec("{$script_path}/volume.sh");
 foreach ($iet as $line) {
   $line = trim($line);
   if (preg_match('/^tid:(\d+) name:[0-9A-Za-z\-\.]+:([0-9A-Za-z]+)$/', $line, $match) == 1) {
@@ -51,5 +51,3 @@ chain http://disksrv1.nakhon.net/{$alternative_name}
 
 EOM;
 }
-//chain http://disksrv1.nakhon.net/memtest86
-//chain http://disksrv1.nakhon.net/vmlinuz-2.6.32.33-s1 nfsroot=10.64.2.1:/InterSol/ThinServ/s1 ip=::::::dhcp
