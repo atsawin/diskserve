@@ -14,7 +14,7 @@ $cow_size = $computer_map[$ip]['cow_size'];
 $cluster_id = $computer_map[$ip]['cluster_id'];
 $cluster_name = $computer_map[$ip]['cluster_name'];
 
-$iet = shell_exec("{$script_path}/volume.sh");
+$iet = explode("\n", shell_exec("{$script_path}/volume.sh"));
 foreach ($iet as $line) {
   $line = trim($line);
   if (preg_match('/^tid:(\d+) name:[0-9A-Za-z\-\.]+:([0-9A-Za-z]+)$/', $line, $match) == 1) {
