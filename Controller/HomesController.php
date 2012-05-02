@@ -19,7 +19,7 @@ class HomesController extends AppController {
           $line_array = preg_split('/[: \/]/', $line);
           foreach ($clusters as &$cluster) {
             foreach ($cluster['Computer'] as &$computer) {
-              if ($computer['name'] == $line_array[0]) {
+              if (($computer['name'] == $line_array[0]) && (count($line_array) > 7)) {
                 $computer['cow_size'] = $line_array[6] / 2;
                 $computer['cow_used'] = $line_array[5] / 2;
               }
