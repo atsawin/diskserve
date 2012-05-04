@@ -11,6 +11,14 @@ class HomesController extends AppController {
     $ret = shell_exec("sudo {$script_path}/status.sh");
     $status = explode("\n", $ret);
     $mode = '';
+    foreach ($clusters as &$cluster) {
+      foreach ($cluster['Computer'] as &$computer) {
+        $computer['cow_size'] = 0;
+        $computer['cow_used'] = 0;
+      }
+      unset($computer);
+    }
+    unset($cluster);
     foreach ($status as $line) {
       if (preg_match('/^::(.+)$/', $line, $match)) {
         $mode = $match[1];
