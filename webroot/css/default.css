@@ -45,3 +45,12 @@ td.number {
   text-align: right;
   padding-right: 5%;
 }
+td.warn_level1 {
+  background: #ff3333;
+}
+td.warn_level2 {
+  background: #ff9999;
+}
+td.warn_level3 {
+  background: #ffff99;
+}
