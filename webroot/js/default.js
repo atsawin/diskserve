@@ -113,7 +113,7 @@ jQuery.fn.updateSubToggle = function() {
 
 jQuery.fn.initPage = function() {
   // Faid flash message
-  $("#flashMessage").delay(2000).fadeOut(1000);
+  $("#flashMessage").delay(30000).fadeOut(1000);
   // Focus username in login form
   $("#UserUsername").focus();
 }

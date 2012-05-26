@@ -79,7 +79,7 @@ class HomesController extends AppController {
         $current_computer = $computer;
       }
     }
-    shell_exec("sudo {$script_path}/mergecow_start.sh {$image_path} {$current_cluster['Cluster']['name']} " .
+    $ret = shell_exec("sudo {$script_path}/mergecow_start.sh {$image_path} {$current_cluster['Cluster']['name']} " .
         "{$current_cluster['Cluster']['loop_name']} {$cow_path} {$cluster['computer']} {$current_computer['loop_name']} >> /tmp/b 2>&1");
     $merge = array(
       'cluster_id' => $cluster_id,
@@ -90,7 +90,8 @@ class HomesController extends AppController {
       'computer_name' => $cluster['computer'],
       'cow_loop_name' => $current_computer['loop_name'],
       'cow_size' => $current_cluster['Cluster']['cow_size'],
-      'computers' => $computers
+      'computers' => $computers,
+      'status' => $ret
     );
     $this->Session->write('merge', $merge);
   }
@@ -118,6 +119,11 @@ class HomesController extends AppController {
     if ($status['pending_size'] == $status['meta_size']) {
       shell_exec("sudo {$script_path}/mergecow_finish.sh {$merge['image_path']} {$merge['cluster_name']} " .
         "{$merge['image_loop_name']} {$merge['cow_path']} {$merge['computer_name']} {$merge['cow_loop_name']} >> /tmp/b 2>&1");
+      if (($line_array[3] == 'Merge') && ($line_array[4] == 'failed')) {
+        shell_exec("sudo {$script_path}/start.sh >> /tmp/b 2>&1");
+        $this->Session->setFlash(__('Merge Failed!'));
+        $this->redirect(array('action' => 'index'));
+      }
       shell_exec("sudo {$script_path}/clearcows.sh {$merge['cow_path']} {$merge['cow_size']} {$merge['computers']} >> /tmp/b 2>&1");
       foreach ($data as $cluster_id => $cluster) {
         if ($cluster_id <= $merge['cluster_id']) {

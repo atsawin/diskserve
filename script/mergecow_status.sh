@@ -1,9 +1,9 @@
 #!/bin/sh
 
 # Purpose:
-#   Merge cow from specified computer to master image. Must run after stop iscsi/dm/lo.
+#   Show merging progress. Must run after mergecow_start.sh
 # Usage:
-#   mergecow.sh <image_path> <cluster_name> <image_loop_name> <cow_path> <computer_name> <cow_loop_name>
+#   mergecow_status.sh <image_path> <cluster_name> <image_loop_name> <cow_path> <computer_name> <cow_loop_name>
 
 IMAGE_PATH=$1
 CLUSTER_NAME=$2

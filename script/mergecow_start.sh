@@ -3,7 +3,7 @@
 # Purpose:
 #   Merge cow from specified computer to master image. Must run after stop iscsi/dm/lo.
 # Usage:
-#   mergecow.sh <image_path> <cluster_name> <image_loop_name> <cow_path> <computer_name> <cow_loop_name>
+#   mergecow_start.sh <image_path> <cluster_name> <image_loop_name> <cow_path> <computer_name> <cow_loop_name>
 
 IMAGE_PATH=$1
 CLUSTER_NAME=$2
@@ -26,3 +26,4 @@ image_size=`blockdev --getsize $IMAGE_LOOP_NAME`
 
 losetup $COW_LOOP_NAME ${COW_PATH}/${COMPUTER_NAME}.cow
 dmsetup create $COMPUTER_NAME --table "0 $image_size snapshot-merge $IMAGE_LOOP_NAME $COW_LOOP_NAME p 64"
+echo $?
