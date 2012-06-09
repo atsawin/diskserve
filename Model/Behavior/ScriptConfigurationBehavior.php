@@ -76,12 +76,15 @@ EOM
           fwrite($fp, "losetup -r {$alternative['loop_name']} {$image_path}/{$alternative['image']}\n");
         }
       }
-      fwrite($fp, "cow_size=`blockdev --getsize {$cluster['Cluster']['loop_name']}`\n");
+      foreach ($cluster['Computer'] as $computer) {
+        fwrite($fp, "[ ! -e {$cow_path}/{$computer['name']}.cow ] && dd if=/dev/zero of={$cow_path}/{$computer['name']}.cow bs=1M count=0 seek={$cluster['Cluster']['cow_size']}\n");
+      }
+      fwrite($fp, "image_size=`blockdev --getsize {$cluster['Cluster']['loop_name']}`\n");
       foreach ($cluster['Computer'] as $computer) {
         fwrite($fp, "losetup {$computer['loop_name']} {$cow_path}/{$computer['name']}.cow\n");
       }
       foreach ($cluster['Computer'] as $computer) {
-        fwrite($fp, "dmsetup create {$computer['name']} --table \"0 \${cow_size} snapshot {$cluster['Cluster']['loop_name']} {$computer['loop_name']} p 64\"\n");
+        fwrite($fp, "dmsetup create {$computer['name']} --table \"0 \${image_size} snapshot {$cluster['Cluster']['loop_name']} {$computer['loop_name']} p 64\"\n");
       }
     }
     fclose($fp);

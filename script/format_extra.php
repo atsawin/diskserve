@@ -25,7 +25,7 @@ $computers = array(
 );
 
 $losetup = '/sbin/losetup';
-$mkfs = '/sbin/mkfs.ntfs -f -I -L Drive_D';
+$mkfs = '/sbin/mkfs.ntfs -f -I -L DRIVE_D';
 
 $now = time();
 $localtime = localtime($now, true);
