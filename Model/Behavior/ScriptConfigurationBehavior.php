@@ -101,6 +101,16 @@ EOM
       }
     }
     fclose($fp);
+    $fp = fopen("{$script_path}/config/shutdown.sh", 'w');
+    fwrite($fp, <<<EOM
+#!/bin/sh
+dmsetup remove_all
+dmsetup status
+losetup -d /dev/loop[0-9]*
+
+EOM
+    );
+    fclose($fp);
     $fp = fopen("{$script_path}/config/dhcpd.conf", 'w');
     foreach ($clusters as $cluster) {
       foreach ($cluster['Computer'] as $computer) {
