@@ -26,6 +26,7 @@ echo $COW_SIZE >> /tmp/a
 image_size=`blockdev --getsize $IMAGE_LOOP_NAME`
 
 ietadm --op delete --tid $TID --lun 0
+sleep 1.5
 dmsetup remove $COMPUTER_NAME
 losetup -d $COW_LOOP_NAME
 rm ${COW_PATH}/${COMPUTER_NAME}.cow
@@ -33,3 +34,4 @@ dd if=/dev/zero of=${COW_PATH}/${COMPUTER_NAME}.cow bs=1M count=0 seek=$COW_SIZE
 losetup $COW_LOOP_NAME ${COW_PATH}/${COMPUTER_NAME}.cow
 dmsetup create ${COMPUTER_NAME} --table "0 ${image_size} snapshot $IMAGE_LOOP_NAME $COW_LOOP_NAME p 64"
 ietadm --op new --tid $TID --lun 0 --params Path=/dev/mapper/${COMPUTER_NAME}
+sleep 1.5
