@@ -94,6 +94,8 @@ EOM
       fwrite($fp, "#  Lun 0 Path={$image_path}/{$cluster['Cluster']['name']}.img,Type=fileio\n");
       foreach ($cluster['Computer'] as $computer) {
         fwrite($fp, "Target {$server_iscsi_name}:{$computer['name']}\n");
+        fwrite($fp, "  NOPInterval 60\n");
+        fwrite($fp, "  NOPTimeout 60\n");
         fwrite($fp, "  Lun 0 Path=/dev/mapper/{$computer['name']},Type=fileio\n");
         for ($cnt_disk = 1; $cnt_disk <= $cluster['Cluster']['extra_disk']; $cnt_disk++) {
           fwrite($fp, "  Lun {$cnt_disk} Path={$image_path}/{$computer['name']}e{$cnt_disk}.img,Type=fileio\n");
