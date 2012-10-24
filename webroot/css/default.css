@@ -26,6 +26,9 @@ label {
 input {
   width: 240px;
 }
+textarea {
+  width: 480px;
+}
 .radio label:first-child {
   width: 120px;
   margin: 0 5px 3px 0;
