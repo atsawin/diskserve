@@ -5,6 +5,8 @@
 # Usage:
 #   mergecow_start.sh <image_path> <cluster_name> <image_loop_name> <cow_path> <computer_name> <cow_loop_name>
 
+. /www/diskserv/app/script/config/setting.sh
+
 IMAGE_PATH=$1
 CLUSTER_NAME=$2
 IMAGE_LOOP_NAME=$3
@@ -21,6 +23,11 @@ echo $COW_PATH >> /tmp/a
 echo $COMPUTER_NAME >> /tmp/a
 echo $COW_LOOP_NAME >> /tmp/a
 
+if [ ! -z $IMAGE_BACKUP_PATH ]; then
+  NOW=`date +%Y%m%d%H%M%S`
+  mkdir -p $IMAGE_BACKUP_PATH
+  cp ${COW_PATH}/${COMPUTER_NAME}.cow ${IMAGE_BACKUP_PATH}/merge_${CLUSTER_NAME}_${NOW}.cow
+fi
 losetup $IMAGE_LOOP_NAME ${IMAGE_PATH}/${CLUSTER_NAME}.img
 image_size=`blockdev --getsize $IMAGE_LOOP_NAME`
 

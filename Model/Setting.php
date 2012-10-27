@@ -5,6 +5,8 @@ App::uses('AppModel', 'Model');
  *
  */
 class Setting extends AppModel {
+    public $actsAs = array('ScriptSetting');
+
 /**
  * Display field
  *
