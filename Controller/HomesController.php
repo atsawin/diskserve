@@ -150,8 +150,10 @@ class HomesController extends AppController {
       foreach ($this->request->data['Computer'] as $computer_id => $computer) {
         if (($computer['mode'] == 'T') || ($computer['mode'] == 'P')) {
           $data[] = array('id' => $computer_id, 'mode' => $computer['mode'], 'alternative_id' => null);
-        } else {
-          $data[] = array('id' => $computer_id, 'mode' => 'A', 'alternative_id' => $computer['mode']);
+        } else if ($computer['mode'] == 'A') {
+          $data[] = array('id' => $computer_id, 'mode' => 'A', 'alternative_id' => $computer['mode'][1]);
+        } else if ($computer['mode'] == 'V') {
+          $data[] = array('id' => $computer_id, 'mode' => 'V', 'variation_id' => $computer['mode'][1]);
         }
       }
       $this->Computer->saveMany($data);

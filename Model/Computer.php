@@ -93,6 +93,13 @@ class Computer extends AppModel {
       'conditions' => '',
       'fields' => '',
       'order' => ''
+    ),
+    'Variation' => array(
+      'className' => 'Variation',
+      'foreignKey' => 'variation_id',
+      'conditions' => '',
+      'fields' => '',
+      'order' => ''
     )
   );
 }

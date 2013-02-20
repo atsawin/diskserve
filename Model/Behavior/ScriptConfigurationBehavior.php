@@ -28,7 +28,9 @@ EOM
     );
     foreach ($clusters as $cluster) {
       $alternatives = Set::combine($cluster['Alternative'], '{n}.id', '{n}');
+      $variations = Set::combine($cluster['Variation'], '{n}.id', '{n}');
       $this->log(print_r($alternatives, true));
+      $this->log(print_r($variations, true));
       foreach ($cluster['Computer'] as $computer) {
         if ($computer['alternative_id']) {
           $alternative_mode = $alternatives[$computer['alternative_id']]['mode'];
@@ -39,6 +41,11 @@ EOM
           $alternative_name = '';
           $alternative_loop_name = '';
         }
+        if ($computer['variation_id']) {
+          $variation_name = $variations[$computer['variation_id']]['cow'];
+        } else {
+          $variation_name = '';
+        }
         fwrite($fp, <<< EOM
   '{$computer['ip_address']}' => array(
     'computer_name' => '{$computer['name']}',
@@ -46,6 +53,7 @@ EOM
     'alternative_mode' => '{$alternative_mode}',
     'alternative_name' => '{$alternative_name}',
     'alternative_loop_name' => '{$alternative_loop_name}',
+    'variation_name' => '{$variation_name}',
     'image_loop_name' => '{$cluster['Cluster']['loop_name']}',
     'cow_loop_name' => '{$computer['loop_name']}',
     'cow_size' => {$cluster['Cluster']['cow_size']},

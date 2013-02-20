@@ -10,10 +10,15 @@
       foreach ($cluster['Alternative'] as $alternative) {
         echo "<th>{$alternative['name']}</th>\n";
       }
+      foreach ($cluster['Variation'] as $variation) {
+        echo "<th>{$variation['name']}</th>\n";
+      }
       echo "</tr>\n";
       foreach ($cluster['Computer'] as $computer) {
         if ($computer['mode'] == 'A') {
-          $mode = "{$computer['alternative_id']}";
+          $mode = "A{$computer['alternative_id']}";
+        } else if ($computer['mode'] == 'V') {
+          $mode = "V{$computer['variation_id']}";
         } else {
           $mode = $computer['mode'];
         }
@@ -24,7 +29,11 @@
             array('P' => ''), array('value' => $mode, 'label' => false, 'hiddenField' => false)) . "</td>\n";
         foreach ($cluster['Alternative'] as $alternative) {
           echo "<td>" . $this->Form->radio("Computer.{$computer['id']}.mode",
-              array("{$alternative['id']}" => ''), array('value' => $mode, 'label' => false, 'hiddenField' => false)) . "</td>\n";
+              array("A{$alternative['id']}" => ''), array('value' => $mode, 'label' => false, 'hiddenField' => false)) . "</td>\n";
+        }
+        foreach ($cluster['Variation'] as $variation) {
+          echo "<td>" . $this->Form->radio("Computer.{$computer['id']}.mode",
+              array("V{$variation['id']}" => ''), array('value' => $mode, 'label' => false, 'hiddenField' => false)) . "</td>\n";
         }
         echo "</tr>\n";
       }

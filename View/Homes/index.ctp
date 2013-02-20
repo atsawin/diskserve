@@ -47,6 +47,13 @@
                   break;
                 }
               }
+            } else if ($computer['mode'] == 'V') {
+              foreach ($cluster['Variation'] as $variation) {
+                if ($variation['id'] == $computer['variation_id']) {
+                  $mode = $variation['name'];
+                  break;
+                }
+              }
             }
             echo "<td>" . ($cnt_col * $row_per_col + $cnt_row + 1) . "</td>\n";
             echo "<td>{$computer['name']}</td>\n";

@@ -93,6 +93,19 @@ class Cluster extends AppModel {
       'exclusive' => '',
       'finderQuery' => '',
       'counterQuery' => ''
+    ),
+    'Variation' => array(
+      'className' => 'Variation',
+      'foreignKey' => 'cluster_id',
+      'dependent' => false,
+      'conditions' => '',
+      'fields' => '',
+      'order' => '',
+      'limit' => '',
+      'offset' => '',
+      'exclusive' => '',
+      'finderQuery' => '',
+      'counterQuery' => ''
     )
   );
 }

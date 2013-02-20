@@ -8,6 +8,7 @@ $mode = $computer_map[$ip]['mode'];
 $alternative_mode = $computer_map[$ip]['alternative_mode'];
 $alternative_name = $computer_map[$ip]['alternative_name'];
 $alternative_loop_name = $computer_map[$ip]['alternative_loop_name'];
+$variation_name = $computer_map[$ip]['variation_name'];
 $image_loop_name = $computer_map[$ip]['image_loop_name'];
 $cow_loop_name = $computer_map[$ip]['cow_loop_name'];
 $cow_size = $computer_map[$ip]['cow_size'];
@@ -24,16 +25,21 @@ foreach ($iet as $line) {
   }
 }
 
-if (($mode == 'T') || (($mode == 'A') && ($alternative_mode == 'S'))) {
-  if ($mode == 'T') {
-    $loop_name = $image_loop_name;
-  } else {
+if (($mode == 'T') || (($mode == 'A') && ($alternative_mode == 'S')) || ($mode == 'V')) {
+  if ($mode == 'A') {
     $loop_name = $alternative_loop_name;
+  } else {
+    $loop_name = $image_loop_name;
+  }
+  if ($mode == 'V') {
+    $cow_source = 'variation/' . $variation_name;
+  } else {
+    $cow_source = 'NULL';
   }
   shell_exec("sudo {$script_path}/newcow.sh {$computer_name} {$tid} {$image_path} {$loop_name} {$cow_path} " .
-      "{$cow_loop_name} {$cow_size}");
+      "{$cow_loop_name} {$cow_size} {$cow_source}");
 }
-if (($mode == 'T') || ($mode == 'P') || (($mode == 'A') && ($alternative_mode == 'S'))) {
+if (($mode == 'T') || ($mode == 'P') || (($mode == 'A') && ($alternative_mode == 'S')) || ($mode == 'V')) {
   echo <<<EOM
 #!ipxe
 
