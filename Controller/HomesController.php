@@ -79,6 +79,9 @@ class HomesController extends AppController {
         $current_computer = $computer;
       }
     }
+    foreach ($current_cluster['Variation'] as $variation) {
+      $computers .= " variation/{$variation['cow']}";
+    }
     $ret = shell_exec("sudo {$script_path}/mergecow_start.sh {$image_path} {$current_cluster['Cluster']['name']} " .
         "{$current_cluster['Cluster']['loop_name']} {$cow_path} {$cluster['computer']} {$current_computer['loop_name']} >> /tmp/b 2>&1");
     $merge = array(
