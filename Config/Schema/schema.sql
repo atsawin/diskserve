@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS `diskless`.`clusters`;
 DROP TABLE IF EXISTS `diskless`.`computers`;
 DROP TABLE IF EXISTS `diskless`.`settings`;
 DROP TABLE IF EXISTS `diskless`.`users`;
+DROP TABLE IF EXISTS `diskless`.`variations`;
 
 
 CREATE TABLE `diskless`.`alternatives` (
@@ -38,12 +39,14 @@ CREATE TABLE `diskless`.`computers` (
 	`mac_address` varchar(17) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
 	`loop_name` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
 	`cluster_id` int(10) NOT NULL,
-	`mode` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'A-Alternate, P-Persistent, T-Transient',
+	`mode` varchar(1) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'A-Alternate, P-Persistent, T-Transient, V-Variation',
 	`alternative_id` int(10) DEFAULT NULL,
+	`variation_id` int(10) DEFAULT NULL,
 	`created` datetime DEFAULT NULL,
 	`modified` datetime DEFAULT NULL,	PRIMARY KEY  (`id`),
 	KEY `cluster_id` (`cluster_id`),
-	KEY `alternative_id` (`alternative_id`)) 	DEFAULT CHARSET=utf8,
+	KEY `alternative_id` (`alternative_id`),
+	KEY `variation_id` (`variation_id`)) 	DEFAULT CHARSET=utf8,
 	COLLATE=utf8_general_ci,
 	ENGINE=InnoDB;
 
@@ -64,6 +67,17 @@ CREATE TABLE `diskless`.`users` (
 	`group_id` int(10) DEFAULT NULL,
 	`created` datetime DEFAULT NULL,
 	`modified` datetime DEFAULT NULL,	PRIMARY KEY  (`id`)) 	DEFAULT CHARSET=utf8,
+	COLLATE=utf8_general_ci,
+	ENGINE=InnoDB;
+
+CREATE TABLE `diskless`.`variations` (
+	`id` int(10) NOT NULL AUTO_INCREMENT,
+	`name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+	`cow` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+	`cluster_id` int(10) NOT NULL,
+	`created` datetime DEFAULT NULL,
+	`modified` datetime DEFAULT NULL,	PRIMARY KEY  (`id`),
+	KEY `cluster_id` (`cluster_id`)) 	DEFAULT CHARSET=utf8,
 	COLLATE=utf8_general_ci,
 	ENGINE=InnoDB;
 
