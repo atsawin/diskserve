@@ -72,26 +72,33 @@ class HomesController extends AppController {
     }
     $image_path = $this->getSetting('image_path');
     $cow_path = $this->getSetting('cow_path');
+    if ($cluster['computer'][0] == 'V') {
+      $cow_path .= '/variation';
+    }
     $computers = '';
+    $cow_loop_name = $current_cluster['Computer'][0]['loop_name'];
     foreach ($current_cluster['Computer'] as $computer) {
       $computers .= " {$computer['name']}";
-      if ($computer['name'] == $cluster['computer']) {
-        $current_computer = $computer;
+      if (($cluster['computer'][0] == 'C') && (substr($cluster['computer'], 1) == $computer['id'])) {
+        $cow_name = $computer['name'];
       }
     }
     foreach ($current_cluster['Variation'] as $variation) {
       $computers .= " variation/{$variation['cow']}";
+      if (($cluster['computer'][0] == 'V') && (substr($cluster['computer'], 1) == $variation['id'])) {
+        $cow_name = $variation['cow'];
+      }
     }
     $ret = shell_exec("sudo {$script_path}/mergecow_start.sh {$image_path} {$current_cluster['Cluster']['name']} " .
-        "{$current_cluster['Cluster']['loop_name']} {$cow_path} {$cluster['computer']} {$current_computer['loop_name']} >> /tmp/b 2>&1");
+        "{$current_cluster['Cluster']['loop_name']} {$cow_path} {$cow_name} {$cow_loop_name} >> /tmp/b 2>&1");
     $merge = array(
       'cluster_id' => $cluster_id,
       'image_path' => $image_path,
       'cluster_name' => $current_cluster['Cluster']['name'],
       'image_loop_name' => $current_cluster['Cluster']['loop_name'],
       'cow_path' => $cow_path,
-      'computer_name' => $cluster['computer'],
-      'cow_loop_name' => $current_computer['loop_name'],
+      'cow_name' => $cow_name,
+      'cow_loop_name' => $cow_loop_name,
       'cow_size' => $current_cluster['Cluster']['cow_size'],
       'computers' => $computers,
       'status' => $ret
@@ -109,7 +116,7 @@ class HomesController extends AppController {
     }
     $script_path = $this->getScriptPath();
     $ret = shell_exec("sudo {$script_path}/mergecow_status.sh {$merge['image_path']} {$merge['cluster_name']} " .
-        "{$merge['image_loop_name']} {$merge['cow_path']} {$merge['computer_name']} {$merge['cow_loop_name']}");
+        "{$merge['image_loop_name']} {$merge['cow_path']} {$merge['cow_name']} {$merge['cow_loop_name']}");
     $line_array = preg_split('/[ \/]/', $ret);
     $status = array(
       'pending_size' => $line_array[3] / 2,
@@ -121,7 +128,7 @@ class HomesController extends AppController {
     }
     if ($status['pending_size'] == $status['meta_size']) {
       shell_exec("sudo {$script_path}/mergecow_finish.sh {$merge['image_path']} {$merge['cluster_name']} " .
-        "{$merge['image_loop_name']} {$merge['cow_path']} {$merge['computer_name']} {$merge['cow_loop_name']} >> /tmp/b 2>&1");
+        "{$merge['image_loop_name']} {$merge['cow_path']} {$merge['cow_name']} {$merge['cow_loop_name']} >> /tmp/b 2>&1");
       if (($line_array[3] == 'Merge') && ($line_array[4] == 'failed')) {
         shell_exec("sudo {$script_path}/start.sh >> /tmp/b 2>&1");
         $this->Session->setFlash(__('Merge Failed!'));
@@ -153,10 +160,10 @@ class HomesController extends AppController {
       foreach ($this->request->data['Computer'] as $computer_id => $computer) {
         if (($computer['mode'] == 'T') || ($computer['mode'] == 'P')) {
           $data[] = array('id' => $computer_id, 'mode' => $computer['mode'], 'alternative_id' => null);
-        } else if ($computer['mode'] == 'A') {
-          $data[] = array('id' => $computer_id, 'mode' => 'A', 'alternative_id' => $computer['mode'][1]);
-        } else if ($computer['mode'] == 'V') {
-          $data[] = array('id' => $computer_id, 'mode' => 'V', 'variation_id' => $computer['mode'][1]);
+        } else if ($computer['mode'][0] == 'A') {
+          $data[] = array('id' => $computer_id, 'mode' => 'A', 'alternative_id' => substr($computer['mode'], 1));
+        } else if ($computer['mode'][0] == 'V') {
+          $data[] = array('id' => $computer_id, 'mode' => 'V', 'variation_id' => substr($computer['mode'], 1));
         }
       }
       $this->Computer->saveMany($data);

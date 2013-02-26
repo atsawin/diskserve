@@ -6,7 +6,10 @@
      foreach ($clusters as $cluster) {
        $computers = array();
        foreach ($cluster['Computer'] as $computer) {
-         $computers[$computer['name']] = $computer['name'];
+         $computers['C' . $computer['id']] = $computer['name'];
+       }
+       foreach ($cluster['Variation'] as $variation) {
+         $computers['V' . $variation['id']] = $variation['name'];
        }
        echo "<fieldset>\n";
        echo "<legend>{$cluster['Cluster']['name']}</legend>\n";
