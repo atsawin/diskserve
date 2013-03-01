@@ -72,8 +72,9 @@ class HomesController extends AppController {
     }
     $image_path = $this->getSetting('image_path');
     $cow_path = $this->getSetting('cow_path');
+    $cow_source_path = $cow_path;
     if ($cluster['computer'][0] == 'V') {
-      $cow_path .= '/variation';
+      $cow_source_path .= '/variation';
     }
     $computers = '';
     $cow_loop_name = $current_cluster['Computer'][0]['loop_name'];
@@ -90,7 +91,7 @@ class HomesController extends AppController {
       }
     }
     $ret = shell_exec("sudo {$script_path}/mergecow_start.sh {$image_path} {$current_cluster['Cluster']['name']} " .
-        "{$current_cluster['Cluster']['loop_name']} {$cow_path} {$cow_name} {$cow_loop_name} >> /tmp/b 2>&1");
+        "{$current_cluster['Cluster']['loop_name']} {$cow_source_path} {$cow_name} {$cow_loop_name} >> /tmp/b 2>&1");
     $merge = array(
       'cluster_id' => $cluster_id,
       'image_path' => $image_path,
