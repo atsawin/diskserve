@@ -15,4 +15,5 @@ echo $COW_PATH >> /tmp/a
 echo $COMPUTER_NAME >> /tmp/a
 echo $VARIATION_FILE >> /tmp/a
 
+mkdir -p ${COW_PATH}/variation
 cp -a ${COW_PATH}/${COMPUTER_NAME}.cow ${COW_PATH}/variation/${VARIATION_FILE}.cow
