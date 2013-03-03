@@ -4,7 +4,7 @@
 		<legend><?php echo __('Add Variation'); ?></legend>
 	<?php
 		echo $this->Form->input('name');
-		echo $this->Form->input('cow');
+		echo $this->Form->input('cow', array('label' => 'CoW File Name'));
 		echo $this->Form->input('cluster_id');
 		echo $this->Form->input('computer_id', array('label' => 'Copy CoW from'));
 	?>

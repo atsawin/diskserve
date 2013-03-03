@@ -5,7 +5,7 @@
 	<?php
 		echo $this->Form->input('id');
 		echo $this->Form->input('name');
-		echo $this->Form->input('cow');
+		echo $this->Form->input('cow', array('label' => 'CoW File Name'));
 		echo $this->Form->input('cluster', array('type' => 'text', 'readonly' => true, 'value' => $clusters[$this->request->data['Variation']['cluster_id']]));
 		echo $this->Form->input('computer_id', array('label' => 'Copy CoW from', 'empty' => 'Do not copy'));
 	?>
