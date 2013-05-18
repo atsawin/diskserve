@@ -29,8 +29,6 @@ EOM
     foreach ($clusters as $cluster) {
       $alternatives = Set::combine($cluster['Alternative'], '{n}.id', '{n}');
       $variations = Set::combine($cluster['Variation'], '{n}.id', '{n}');
-      $this->log(print_r($alternatives, true));
-      $this->log(print_r($variations, true));
       foreach ($cluster['Computer'] as $computer) {
         if ($computer['alternative_id']) {
           $alternative_mode = $alternatives[$computer['alternative_id']]['mode'];
